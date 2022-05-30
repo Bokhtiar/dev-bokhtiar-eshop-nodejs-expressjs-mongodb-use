@@ -1,5 +1,6 @@
 const User = require('../models/users.model')
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 /* Register */
 const Register = async (req, res, next) => {
@@ -20,7 +21,7 @@ const Register = async (req, res, next) => {
 
         const newUser = new User({
             name,
-            email, 
+            email,
             password: hashPassword
         })
         await newUser.save()
@@ -47,13 +48,59 @@ const Index = async (req, res, next) => {
         next(error)
     }
 }
-/* Register */
 
+/* Login */
+const Login = async (req, res, next) => {
+    try {
+        const {
+            email,
+            password
+        } = req.body
+
+        /* email valid checking */
+        const account = await User.findOne({ email })
+        if (!account) {
+            res.status(404).json({
+                status: false,
+                message: "Invalid email...!"
+            })
+        }
+
+        /* Compare with password */
+        const result = await bcrypt.compare(password, account.password)
+        if (!result) {
+            return res.status(404).json({
+                status: false,
+                message: "Invalid password...!"
+            })
+        }
+
+        /* Generate JWT token */
+        const token = await jwt.sign(
+            {
+                id: account._id,
+                name: account.name,
+                role: account.role,
+                permissions: account.permissions,
+            }, process.env.JWT_SECRET, { expiresIn: '1d' }
+        )
+
+        return res.status(200).json({
+            status: true,
+            token
+        })
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
 /* Register */
 
 /* Register */
 
 module.exports = {
     Register,
-    Index
+    Index,
+    Login,
 }
