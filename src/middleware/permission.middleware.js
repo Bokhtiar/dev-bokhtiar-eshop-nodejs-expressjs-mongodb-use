@@ -14,7 +14,7 @@ const isAdmin = async (req, res, next) => {
         const splitToken = await req.headers.authorization.split(' ')[1]
         const decode = await jwt.verify(splitToken, process.env.JWT_SECRET)
 
-        if (decode.role == "student" || decode.role == "admin") {
+        if (decode.role == "admin") {
             req.user = decode
             next()
         }else {

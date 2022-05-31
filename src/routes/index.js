@@ -6,7 +6,7 @@ const permission = require('../middleware/permission.middleware')
 const adminCategory = require('../routes/admin/category.route')
 
 appRouter.use('/admin', adminRoute)
-appRouter.use('/admin/category', adminCategory)
+appRouter.use('/admin/category', permission.isAdmin, adminCategory)
 
 
 appRouter.use('/user', userRoute)
