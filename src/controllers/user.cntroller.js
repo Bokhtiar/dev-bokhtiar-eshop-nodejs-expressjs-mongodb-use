@@ -102,5 +102,5 @@ const Login = async (req, res, next) => {
 module.exports = {
     Register,
     Index,
-    Login,
+    Login
 }
