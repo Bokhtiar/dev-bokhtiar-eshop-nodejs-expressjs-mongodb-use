@@ -1,4 +1,5 @@
-const User = require('../models/users.model')
+const admins = require('../../models/admin.model')
+
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
@@ -8,7 +9,7 @@ const Register = async (req, res, next) => {
         const { name, email, password } = req.body
 
         /* exist email checking */
-        const isEmailExist = await User.findOne({ email })
+        const isEmailExist = await admins.findOne({ email })
         if (isEmailExist) {
             return res.status(409).json({
                 status: false,
@@ -19,16 +20,16 @@ const Register = async (req, res, next) => {
         /* Hash password */
         const hashPassword = await bcrypt.hash(password, 10)
 
-        const newUser = new User({
+        const newAdmin = new admins({
             name,
             email,
             password: hashPassword
         })
-        await newUser.save()
+        await newAdmin.save()
 
         res.status(200).json({
             status: true,
-            message: "added Successfully"
+            message: "admin added Successfully"
         })
     } catch (error) {
         console.log(error)
@@ -38,7 +39,7 @@ const Register = async (req, res, next) => {
 /* User List */
 const Index = async (req, res, next) => {
     try {
-        const results = await User.find()
+        const results = await admins.find()
         res.status(200).json({
             status: true,
             data: results,
@@ -58,7 +59,7 @@ const Login = async (req, res, next) => {
         } = req.body
 
         /* email valid checking */
-        const account = await User.findOne({ email })
+        const account = await admins.findOne({ email })
         if (!account) {
             res.status(404).json({
                 status: false,
