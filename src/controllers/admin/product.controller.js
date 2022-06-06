@@ -1,5 +1,21 @@
-const products = require('../../models/products.model')
+const products = require('../../models/products.model') 
 
+
+    /* product List */
+const Index = async (req, res, next) => {
+    try {
+        const results = await products.find()
+        res.status(200).json({
+            status: 200,
+            data: results,
+        })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+    /* product store */
 const Store = async (req, res, next) => {
     try {
         const {
@@ -32,6 +48,23 @@ const Store = async (req, res, next) => {
     }
 }
 
+const Show = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const result = await products.findById(id)
+
+        res.status(200).json({
+            status: true,
+            data : result
+        })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
 module.exports = {
-    Store
+    Index,
+    Store,
+    Show
 }
