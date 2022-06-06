@@ -47,7 +47,7 @@ const Store = async (req, res, next) => {
         next(error)
     }
 }
-
+    /* product show */
 const Show = async (req, res, next) => {
     try {
         const {id} = req.params
@@ -63,8 +63,65 @@ const Show = async (req, res, next) => {
     }
 }
 
+
+  /* product Update */
+  const Update = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const {
+            category_id,
+            title,
+            price,
+            image,
+            description,
+            colors
+        } = req.body
+
+        await products.findByIdAndUpdate(
+            id,
+            {
+                $set:{
+                    category_id,
+                    title,
+                    price,
+                    image,
+                    description,
+                    colors
+                }
+            }
+        )
+
+        res.status(200).json({
+            status: true,
+            message: "Product Update Successfully...!"
+        })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+const Destroy = async(req, res, next) => {
+    try {
+        const {id} = req.params
+        await products.findByIdAndDelete(id)
+
+        res.status(200).json({
+            status:true,
+            message: "Delete successfuly"
+        })
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+}
+
+
+
 module.exports = {
     Index,
     Store,
-    Show
+    Show,
+    Update,
+    Destroy
 }
