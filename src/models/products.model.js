@@ -23,8 +23,11 @@ const newSchema = new Schema({
     colors: [{
         type: String,
         trim: true,
-        required:true
     }],
+    image:{
+        type:String,
+        required:true
+    },
     product_Status: {
         type: String,
         default: 0
